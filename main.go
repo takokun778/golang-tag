@@ -8,11 +8,12 @@ import (
 	"os"
 	"strings"
 
+	_ "github.com/lib/pq"
+
 	"github.com/google/go-github/github"
 	"github.com/slack-go/slack"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
-	"github.com/uptrace/bun/driver/pgdriver"
 )
 
 var DB *bun.DB
@@ -24,7 +25,10 @@ type Tag struct {
 func init() {
 	dsn := os.Getenv("DATABASE_URL")
 
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	sqldb, err := sql.Open("postgres", dsn)
+	if err != nil {
+		log.Fatal("failed to connect database", err)
+	}
 
 	db := bun.NewDB(sqldb, pgdialect.New())
 
@@ -89,21 +93,27 @@ func main() {
 			log.Fatal(err.Error())
 		}
 	} else {
-		log.Println("Not found new tag")
+		log.Println("not found new tag")
+	}
+
+	channel := os.Getenv("SLACK_CHANNEL")
+
+	if channel == "" {
+		log.Println("slack channel is not set")
+		return
 	}
 
 	tkn := os.Getenv("SLACK_TOKEN")
 
 	if tkn == "" {
-		log.Fatal("slack token is not set")
+		log.Println("slack token is not set")
+		return
 	}
-
-	channel := "golang-tag"
 
 	sc := slack.New(tkn)
 
 	for _, tag := range tags {
-		msg := fmt.Sprintf("Added %s tag! \n\n %s", tag.Name, "https://github.com/golang/go/releases/tag/"+tag.Name)
+		msg := fmt.Sprintf("added %s tag! \n\n %s", tag.Name, "https://github.com/golang/go/releases/tag/"+tag.Name)
 		if _, _, err := sc.PostMessage(channel, slack.MsgOptionText(msg, true)); err != nil {
 			log.Fatal(err.Error())
 		}
