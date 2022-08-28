@@ -2,59 +2,26 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
-	"strings"
-
-	_ "github.com/lib/pq"
+	"tags/database"
 
 	"github.com/google/go-github/github"
 	"github.com/slack-go/slack"
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/pgdialect"
 )
-
-var DB *bun.DB
-
-type Tag struct {
-	Name string `bun:"name"`
-}
-
-func init() {
-	dsn := os.Getenv("DATABASE_URL")
-
-	sqldb, err := sql.Open("postgres", dsn)
-	if err != nil {
-		log.Fatal("failed to connect database", err)
-	}
-
-	db := bun.NewDB(sqldb, pgdialect.New())
-
-	if _, err := db.NewCreateTable().Model((*Tag)(nil)).Exec(context.Background()); err != nil {
-		if strings.Contains(err.Error(), "already exists") {
-			log.Println(err.Error())
-		} else {
-			log.Fatal(err.Error())
-		}
-	}
-
-	DB = db
-}
 
 func main() {
 	log.Println("start app...")
 
 	ctx := context.Background()
 
-	var src []Tag
-
-	if err := DB.NewSelect().Model(&src).Scan(ctx); err != nil {
-		log.Fatal(err.Error())
+	src, err := database.SelectAll(ctx)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	var dst []Tag
+	var dst []database.Tag
 
 	client := github.NewClient(nil)
 
@@ -74,7 +41,7 @@ func main() {
 		}
 
 		for _, tag := range tags {
-			dst = append(dst, Tag{
+			dst = append(dst, database.Tag{
 				Name: *tag.Name,
 			})
 		}
@@ -86,11 +53,11 @@ func main() {
 		opts.Page += 1
 	}
 
-	tags := Take(dst, src)
+	tags := database.Take(dst, src)
 
 	if len(tags) != 0 {
-		if _, err := DB.NewInsert().Model(&tags).Exec(ctx); err != nil {
-			log.Fatal(err.Error())
+		if err := database.BulkInsert(ctx, tags); err != nil {
+			log.Fatal(err)
 		}
 	} else {
 		log.Println("not found new tag")
@@ -118,18 +85,4 @@ func main() {
 			log.Fatal(err.Error())
 		}
 	}
-}
-
-func Take(from, target []Tag) []Tag {
-	result := from
-	for _, i := range target {
-		list := make([]Tag, 0)
-		for _, j := range result {
-			if i != j {
-				list = append(list, j)
-			}
-		}
-		result = list
-	}
-	return result
 }
