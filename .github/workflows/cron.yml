@@ -1,7 +1,7 @@
 name: Notice Github Repository Tags
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 15 * * *'
 jobs:
   notice:
     runs-on: ubuntu-latest
