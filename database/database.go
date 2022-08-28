@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"tags/model"
@@ -30,6 +31,28 @@ func CreateTable(ctx context.Context) error {
 	_, err := database.NewCreateTable().
 		Model((*model.Tag)(nil)).
 		IfNotExists().
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateIndex(ctx context.Context) error {
+	_, err := database.NewCreateIndex().
+		Model((*model.Tag)(nil)).
+		Index("name_idx").
+		Column("name").
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = database.NewCreateIndex().
+		Model((*model.Tag)(nil)).
+		Index("repo_idx").
+		Column("repo").
 		Exec(ctx)
 	if err != nil {
 		return err
@@ -73,10 +96,16 @@ func Delete(ctx context.Context, name string) error {
 	return nil
 }
 
-func SelectAll(ctx context.Context) ([]model.Tag, error) {
+func SelectAll(ctx context.Context, owner, repository string) ([]model.Tag, error) {
 	var tags []model.Tag
 
-	if err := database.NewSelect().Model(&tags).Scan(ctx); err != nil {
+	repo := fmt.Sprintf(model.RepoFormat, owner, repository)
+
+	err := database.NewSelect().
+		Model(&tags).
+		Where("repo = ?", repo).
+		Scan(ctx)
+	if err != nil {
 		return nil, err
 	}
 

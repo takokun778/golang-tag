@@ -16,6 +16,8 @@ func ListTags(ctx context.Context, owner, repository string) ([]model.Tag, error
 
 	client := github.NewClient(nil)
 
+	repo := fmt.Sprintf(model.RepoFormat, owner, repository)
+
 	opts := &github.ListOptions{
 		PerPage: 100,
 		Page:    1,
@@ -30,6 +32,7 @@ func ListTags(ctx context.Context, owner, repository string) ([]model.Tag, error
 		for _, tag := range tags {
 			res = append(res, model.Tag{
 				Name: *tag.Name,
+				Repo: repo,
 			})
 		}
 

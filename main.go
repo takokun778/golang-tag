@@ -19,7 +19,7 @@ func main() {
 
 	channel := "golang-tag"
 
-	src, err := database.SelectAll(ctx)
+	src, err := database.SelectAll(ctx, owner, repository)
 	if err != nil {
 		log.Fatal(err)
 	}
