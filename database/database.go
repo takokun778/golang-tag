@@ -40,7 +40,7 @@ func CreateTable(ctx context.Context) error {
 	return nil
 }
 
-func DeleteTable(ctx context.Context) error {
+func DropTable(ctx context.Context) error {
 	_, err := database.NewDropTable().
 		Model((*model.Tag)(nil)).
 		IfExists().
@@ -53,7 +53,22 @@ func DeleteTable(ctx context.Context) error {
 }
 
 func BulkInsert(ctx context.Context, tags []model.Tag) error {
-	if _, err := database.NewInsert().Model(&tags).Exec(ctx); err != nil {
+	_, err := database.NewInsert().
+		Model(&tags).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Delete(ctx context.Context, name string) error {
+	_, err := database.NewDelete().
+		Model((*model.Tag)(nil)).
+		Where("name = ?", name).
+		Exec(ctx)
+	if err != nil {
 		return err
 	}
 

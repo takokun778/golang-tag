@@ -2,19 +2,19 @@ package client
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"os"
 	"tags/model"
 
 	"github.com/google/go-github/github"
+	"github.com/slack-go/slack"
 )
-
-var client *github.Client
-
-func init() {
-	client = github.NewClient(nil)
-}
 
 func ListTags(ctx context.Context, owner, repository string) ([]model.Tag, error) {
 	var res []model.Tag
+
+	client := github.NewClient(nil)
 
 	opts := &github.ListOptions{
 		PerPage: 100,
@@ -41,4 +41,27 @@ func ListTags(ctx context.Context, owner, repository string) ([]model.Tag, error
 	}
 
 	return res, nil
+}
+
+func PostMessage(ctx context.Context, channel, owner, repository string, tags []model.Tag) error {
+	tkn := os.Getenv("SLACK_TOKEN")
+
+	if tkn == "" {
+		log.Println("slack token is not set")
+		return nil
+	}
+
+	client := slack.New(tkn)
+
+	for _, tag := range tags {
+		url := fmt.Sprintf("https://github.com/%s/%s/releases/tag/%s", owner, repository, tag.Name)
+
+		msg := fmt.Sprintf("released %s\n\n %s", tag.Name, url)
+
+		if _, _, err := client.PostMessage(channel, slack.MsgOptionText(msg, true)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
