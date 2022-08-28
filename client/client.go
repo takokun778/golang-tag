@@ -46,11 +46,18 @@ func ListTags(ctx context.Context, owner, repository string) ([]model.Tag, error
 	return res, nil
 }
 
-func PostMessage(ctx context.Context, channel, owner, repository string, tags []model.Tag) error {
+func PostMessage(ctx context.Context, owner, repository string, tags []model.Tag) error {
 	tkn := os.Getenv("SLACK_TOKEN")
 
 	if tkn == "" {
 		log.Println("slack token is not set")
+		return nil
+	}
+
+	channel := os.Getenv("SLACK_CHANNEL")
+
+	if channel == "" {
+		log.Println("slack channel is not set")
 		return nil
 	}
 

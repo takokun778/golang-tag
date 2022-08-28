@@ -29,12 +29,6 @@ func main() {
 				Required: true,
 				Usage:    "github repository name",
 			},
-			&cli.StringFlag{
-				Name:     "channel",
-				Aliases:  []string{"c"},
-				Required: true,
-				Usage:    "slack channel name",
-			},
 		},
 		Action: action,
 	}
@@ -48,8 +42,6 @@ func action(ctx *cli.Context) error {
 	owner := ctx.String("owner")
 
 	repository := ctx.String("repository")
-
-	channel := ctx.String("channel")
 
 	src, err := database.SelectAll(ctx.Context, owner, repository)
 	if err != nil {
@@ -71,7 +63,7 @@ func action(ctx *cli.Context) error {
 		log.Println("not found new tag")
 	}
 
-	if err := client.PostMessage(ctx.Context, channel, owner, repository, tags); err != nil {
+	if err := client.PostMessage(ctx.Context, owner, repository, tags); err != nil {
 		return err
 	}
 
