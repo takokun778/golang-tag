@@ -18,14 +18,12 @@ var database *bun.DB
 func init() {
 	dsn := os.Getenv("DATABASE_URL")
 
-	sqldb, err := sql.Open("postgres", dsn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("failed to connect database", err)
 	}
 
-	db := bun.NewDB(sqldb, pgdialect.New())
-
-	database = db
+	database = bun.NewDB(db, pgdialect.New())
 }
 
 func CreateTable(ctx context.Context) error {
