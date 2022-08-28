@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"tags/client"
 	"tags/database"
+	"tags/model"
 
-	"github.com/google/go-github/github"
 	"github.com/slack-go/slack"
 )
 
@@ -21,39 +22,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var dst []database.Tag
-
-	client := github.NewClient(nil)
-
-	owner := "golang"
-
-	repo := "go"
-
-	opts := &github.ListOptions{
-		PerPage: 100,
-		Page:    1,
+	dst, err := client.ListTags(ctx, "golang", "go")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	for {
-		tags, _, err := client.Repositories.ListTags(ctx, owner, repo, opts)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-
-		for _, tag := range tags {
-			dst = append(dst, database.Tag{
-				Name: *tag.Name,
-			})
-		}
-
-		if len(tags) < 100 {
-			break
-		}
-
-		opts.Page += 1
-	}
-
-	tags := database.Take(dst, src)
+	tags := model.Take(dst, src)
 
 	if len(tags) != 0 {
 		if err := database.BulkInsert(ctx, tags); err != nil {
