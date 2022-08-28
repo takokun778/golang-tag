@@ -20,3 +20,5 @@ jobs:
           go-version: 1.19
       - name: Notice Golang Tags
         run: go run main.go --owner golang --repository go
+      - name: Notice Golang CI Lint Tags
+        run: go run main.go --owner golangci --repository golangci-lint
