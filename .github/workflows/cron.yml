@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: '*/5 * * * *'
 jobs:
-  demo:
+  notice:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
