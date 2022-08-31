@@ -4,9 +4,7 @@ go 1.19
 
 require (
 	github.com/google/go-github/v47 v47.0.0
-	github.com/google/go-github/v47 v47.0.0
 	github.com/jackc/pgx/v4 v4.17.1
-	github.com/lib/pq v1.10.6
 	github.com/slack-go/slack v0.11.2
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
@@ -25,6 +23,7 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/lib/pq v1.10.6 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
