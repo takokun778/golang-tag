@@ -2,14 +2,13 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 	"tags/model"
 
-	_ "github.com/lib/pq"
-
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 )
@@ -19,9 +18,17 @@ var database *bun.DB
 func init() {
 	dsn := os.Getenv("DATABASE_URL")
 
-	db, err := sql.Open("postgres", dsn)
+	config, err := pgx.ParseConfig(dsn)
 	if err != nil {
-		log.Fatal("failed to connect database", err)
+		log.Fatal(err)
+	}
+
+	config.PreferSimpleProtocol = true
+
+	db := stdlib.OpenDB(*config)
+
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
 	}
 
 	database = bun.NewDB(db, pgdialect.New())
@@ -110,4 +117,8 @@ func SelectAll(ctx context.Context, owner, repository string) ([]model.Tag, erro
 	}
 
 	return tags, nil
+}
+
+func Close() error {
+	return database.Close()
 }
