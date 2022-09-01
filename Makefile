@@ -7,6 +7,7 @@ DATABASE_URL := postgres://$(POSTGRES_USER):$(POSTGRES_PASS)@localhost:$(POSTGRE
 CONTAINER_NAME := golang-tag-db
 SLACK_TOKEN := token
 
+.PHONY: db
 db:
 	@docker run --rm -d \
 		-p $(POSTGRES_PORT):5432 \
@@ -20,11 +21,18 @@ db:
 		--name $(CONTAINER_NAME) \
 		postgres:14.4-alpine
 
+.PHONY: psql
 psql:
 	@docker exec -it $(CONTAINER_NAME) psql -U postgres
 
+.PHONY: stop
 stop:
 	@docker stop $(CONTAINER_NAME)
 
+.PHONY: run
 run:
 	@go run main.go
+
+.PHONY: test
+test:
+	@go test -v ./...
