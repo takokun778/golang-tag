@@ -3,11 +3,6 @@ name: test
 on:
   pull_request:
 
-env:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: postgres
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,6 +10,10 @@ jobs:
     services:
       postgres:
         image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
 
@@ -27,4 +26,4 @@ jobs:
       - name: Go Test
         run: go test -v ./...
         env:
-          DATABASE_URL: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:5432/$(POSTGRES_DB)?sslmode=disable
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
