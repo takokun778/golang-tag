@@ -26,4 +26,4 @@ jobs:
       - name: Go Test
         run: go test -v ./...
         env:
-          DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable
