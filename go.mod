@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/google/go-github/v47 v47.0.0
-	github.com/jackc/pgx/v4 v4.17.1
+	github.com/jackc/pgx/v4 v4.17.2
 	github.com/slack-go/slack v0.11.2
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
