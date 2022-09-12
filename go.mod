@@ -8,7 +8,7 @@ require (
 	github.com/slack-go/slack v0.11.2
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
-	github.com/urfave/cli/v2 v2.16.0
+	github.com/urfave/cli/v2 v2.16.2
 )
 
 require (
