@@ -3,7 +3,7 @@ module tags
 go 1.19
 
 require (
-	github.com/google/go-github/v47 v47.0.0
+	github.com/google/go-github/v47 v47.1.0
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/slack-go/slack v0.11.3
 	github.com/uptrace/bun v1.1.8
