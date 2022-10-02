@@ -22,3 +22,15 @@ jobs:
         run: go run main.go --owner golang --repository go
       - name: Notice Golang CI Lint Tags
         run: go run main.go --owner golangci --repository golangci-lint
+      - name: Set up Git Config
+        run: |
+          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
+      - name: Git Push
+        run: |
+          if (git diff --shortstat | grep '[0-9]'); then \
+            git add *.csv; \
+            git commit -m "update csv"; \
+            git push origin HEAD:${GITHUB_REF}; \
+          fi

@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"tags/client"
-	"tags/database"
+	"tags/csv"
 	"tags/model"
 
 	"github.com/urfave/cli/v2"
@@ -43,7 +43,7 @@ func action(ctx *cli.Context) error {
 
 	repository := ctx.String("repository")
 
-	src, err := database.SelectAll(ctx.Context, owner, repository)
+	src, err := csv.Read(repository)
 	if err != nil {
 		return err
 	}
@@ -53,17 +53,19 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	tags := model.Take(dst, src)
+	diff := model.Take(dst, src)
 
-	if len(tags) != 0 {
-		if err := database.BulkInsert(ctx.Context, tags); err != nil {
-			return err
-		}
-	} else {
-		log.Println("not found new tag")
+	if err := csv.Write(repository, dst); err != nil {
+		return err
 	}
 
-	if err := client.PostMessage(ctx.Context, owner, repository, tags); err != nil {
+	if len(diff) == 0 {
+		log.Println("not found new tag")
+
+		return nil
+	}
+
+	if err := client.PostMessage(ctx.Context, owner, repository, diff); err != nil {
 		return err
 	}
 
