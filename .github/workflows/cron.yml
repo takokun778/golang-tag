@@ -1,6 +1,5 @@
 name: Notice Github Repository Tags
 on:
-  push:
   schedule:
     - cron: '0 15 * * *'
 jobs:
