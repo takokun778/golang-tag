@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: go.mod
+          go-version: ./go.mod
       - name: Notice Golang Tags
         run: go run main.go --owner golang --repository go
       - name: Notice Golang CI Lint Tags
