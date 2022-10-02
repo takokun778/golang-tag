@@ -3,8 +3,8 @@ package model
 const RepoFormat = "%s/%s"
 
 type Tag struct {
-	Name string `bun:"name,pk"`
-	Repo string `bun:"repo,pk"`
+	Repo string `csv:"repo"`
+	Name string `csv:"name"`
 }
 
 func Take(from, target []Tag) []Tag {
