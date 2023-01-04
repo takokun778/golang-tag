@@ -7,7 +7,7 @@ import (
 	"os"
 	"tags/model"
 
-	"github.com/google/go-github/v47/github"
+	"github.com/google/go-github/v49/github"
 	"github.com/slack-go/slack"
 )
 
