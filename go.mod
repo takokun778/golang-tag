@@ -6,6 +6,7 @@ require (
 	github.com/gocarina/gocsv v0.0.0-20221216233619-1fea7ae8d380
 	github.com/google/go-github/v47 v47.1.0
 	github.com/google/go-github/v48 v48.2.0
+	github.com/google/go-github/v49 v49.0.0
 	github.com/slack-go/slack v0.12.1
 	github.com/urfave/cli/v2 v2.23.7
 )
