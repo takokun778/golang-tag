@@ -111,10 +111,12 @@ golang/go,release.r57.2
 golang/go,release.r57.1
 golang/go,release.r57
 golang/go,release.r56
+golang/go,go1.20.1
 golang/go,go1.20
 golang/go,go1.20rc3
 golang/go,go1.20rc2
 golang/go,go1.20rc1
+golang/go,go1.19.6
 golang/go,go1.19.5
 golang/go,go1.19.4
 golang/go,go1.19.3
