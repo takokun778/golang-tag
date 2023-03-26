@@ -1,4 +1,5 @@
 repo,name
+golangci/golangci-lint,v1.52.2
 golangci/golangci-lint,v1.52.1
 golangci/golangci-lint,v1.52.0
 golangci/golangci-lint,v1.51.2
