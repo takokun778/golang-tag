@@ -3,7 +3,7 @@ module tags
 go 1.19
 
 require (
-	github.com/gocarina/gocsv v0.0.0-20230123225133-763e25b40669
+	github.com/gocarina/gocsv v0.0.0-20230406101422-6445c2b15027
 	github.com/google/go-github/v49 v49.1.0
 	github.com/google/go-github/v50 v50.0.0
 	github.com/slack-go/slack v0.12.1
