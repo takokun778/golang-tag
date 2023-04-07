@@ -7,7 +7,7 @@ require (
 	github.com/google/go-github/v49 v49.1.0
 	github.com/google/go-github/v50 v50.0.0
 	github.com/slack-go/slack v0.12.1
-	github.com/urfave/cli/v2 v2.24.3
+	github.com/urfave/cli/v2 v2.25.1
 )
 
 require (
